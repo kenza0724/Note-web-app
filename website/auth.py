@@ -64,3 +64,28 @@ def sign_up():
             return redirect(url_for('views.home'))
 
     return render_template("sign_up.html", user=current_user)
+
+@auth.route('/update-profile', methods=['GET', 'POST'])
+@login_required  # Ensures the user is logged in to access this route
+def update_profile():
+    if request.method == 'POST':
+        new_first_name = request.form.get('new_firstName')
+        new_password1 = request.form.get('new_password1')
+        new_password2 = request.form.get('new_password2')
+
+        # Ensure the user inputs are valid
+        if len(new_first_name) < 2:
+            flash('First name must be greater than 1 character.', category='error')
+        elif new_password1 != new_password2:
+            flash('Passwords don\'t match.', category='error')
+        elif len(new_password1) < 7:
+            flash('Password must be at least 7 characters.', category='error')
+        else:
+            # Update the user's first name and password
+            current_user.first_name = new_first_name
+            current_user.password = generate_password_hash(new_password1, method='scrypt')
+            db.session.commit()
+            flash('Profile updated successfully!', category='success')
+            return redirect(url_for('views.home'))
+
+    return render_template("update_profile.html", user=current_user)
