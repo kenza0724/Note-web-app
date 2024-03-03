@@ -1,15 +1,26 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
-    <h1 align="center">Notes</h1>
+
+<h1 align="center">Notes</h1>
+
+<!-- Search Bar -->
+<div class="input-group mb-3">
+  <input type="text" class="form-control" id="searchInput" placeholder="Search notes..." style="background-color: #eef2f7">
+  <div class="input-group-append">
+    <button class="btn btn-primary" type="button" onclick="searchNotes()">Search</button>
+  </div>
+</div>
+<!-- Notes -->
     <ul class="list-group list-group-flush" id="notes">
       {% for note in user.notes %}
       <li class="list-group-item">
-        {{ note.data }}
+        {{ note.data }} 
         <button type="button" class="close" onClick="deleteNote({{ note.id }})">
           <span aria-hidden="true">&times;</span>
         </button>
       </li>
       {% endfor %}
     </ul>
+  <!-- Add Note form -->
     <form method="POST">
       <textarea name="note" id="note" class="form-control"></textarea>
       <br />
@@ -17,4 +28,8 @@
         <button type="submit" class="btn btn-primary">Add Note</button>
       </div>
     </form>
+
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+
+
     {% endblock %}
